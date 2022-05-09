@@ -74,7 +74,6 @@ namespace PetitNovalTools.Formats
             PixelFormat = (BinaryPixelFormat)BinaryPrimitives.ReadUInt16LittleEndian(data);
             Width = BinaryPrimitives.ReadUInt16LittleEndian(data.Skip(2).Take(2).ToArray());
             Height = BinaryPrimitives.ReadUInt16LittleEndian(data.Skip(4).Take(2).ToArray());
-            File.WriteAllBytes($"{path}.{(ushort)PixelFormat}.dec", data);
         }
 
         public void Save(string path)

@@ -11,10 +11,29 @@ namespace PetitNovalTools
         public ImageToolWindow()
         {
             InitializeComponent();
-            this.DataContext = new ImageToolViewModel();
+            this.PropertyChanged += ImageToolWindow_PropertyChanged;
 #if DEBUG
             this.AttachDevTools();
 #endif
+        }
+
+        private void ImageToolWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs args)
+        {
+            if (args.Property.Name == "IsVisible")
+            {
+                if (args.NewValue != null)
+                {
+                    var v = (bool)args.NewValue;
+                    if (v)
+                    {
+                        this.DataContext = new ImageToolViewModel();
+                    }
+                    else
+                    {
+                        this.DataContext = null;
+                    }
+                }
+            }
         }
 
         private void InitializeComponent()

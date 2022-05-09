@@ -16,8 +16,8 @@ namespace PetitNovalTools
 {
     public class ImageToolViewModel : ReactiveObject
     {
-        private const string CONV_MODE_P2B = "BIN转PNG";
-        private const string CONV_MODE_B2P = "PNG转BIN";
+        private const string CONV_MODE_P2B = "PNG转BIN";
+        private const string CONV_MODE_B2P = "BIN转PNG";
 
         private bool showPreviewer;
         private string currentFolder;
@@ -25,6 +25,7 @@ namespace PetitNovalTools
         private ObservableCollection<string> files;
         private string selectedFile;
         private Bitmap previewImage;
+        private double progress;
 
         public bool ShowPreviewer
         {
@@ -60,6 +61,11 @@ namespace PetitNovalTools
         {
             get => previewImage;
             set => this.RaiseAndSetIfChanged(ref previewImage, value);
+        }
+        public double Progress
+        {
+            get => progress;
+            set => this.RaiseAndSetIfChanged(ref progress, value);
         }
 
         public ImageToolViewModel()
@@ -107,7 +113,7 @@ namespace PetitNovalTools
             }
         }
 
-        private void TryLoadFolder()
+        private async void TryLoadFolder()
         {
             if (!Directory.Exists(CurrentFolder))
             {
@@ -116,7 +122,8 @@ namespace PetitNovalTools
 
             if (SelectedMode == CONV_MODE_B2P)
             {
-                Files = new ObservableCollection<string>(ScanBinaryImages(CurrentFolder));
+                var binFiles = await Task.Run(() => ScanBinaryImages(CurrentFolder));
+                Files = new ObservableCollection<string>(binFiles);
             }
             else if (SelectedMode == CONV_MODE_P2B)
             {
@@ -128,12 +135,15 @@ namespace PetitNovalTools
         {
             var binFiles = Directory.GetFiles(dir, "*.bin", SearchOption.AllDirectories);
             var result = new List<string>();
+            Progress = 0;
+            int i = 0;
             foreach (var binFile in binFiles)
             {
                 if (Formats.BinaryImage.IsValidBinaryImage(binFile))
                 {
                     result.Add(binFile);
                 }
+                Progress = (double)i++ / (double)binFiles.Length * 100;
             }
             return result;
         }

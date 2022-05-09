@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+		Width="400" Height="250" WindowStartupLocation="CenterScreen"
+        x:Class="PetitNovalTools.MainWindow"
+        Title="微型小说工具箱">
+	<Grid Margin="8">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Button
+			Grid.Column="0"
+			Margin="4"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			Command="{Binding OpenImageTool}">
+			图片工具
+		</Button>
+		<Button
+			Grid.Column="1"
+			Margin="4"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center">
+			字库工具
+		</Button>
+
+	</Grid>
+</Window>

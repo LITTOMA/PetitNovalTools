@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using PetitNovalTools.Formats;
 
 namespace PetitNovalTools
 {
@@ -136,9 +137,9 @@ namespace PetitNovalTools
             var binFiles = Directory.GetFiles(dir, "*.bin", SearchOption.AllDirectories);
             var result = new List<string>();
             Progress = 0;
-            int i = 0;
-            foreach (var binFile in binFiles)
+            for (int i = 0; i < binFiles.Length; i++)
             {
+                var binFile = binFiles[i];
                 if (Formats.BinaryImage.IsValidBinaryImage(binFile))
                 {
                     result.Add(binFile);
@@ -152,6 +153,50 @@ namespace PetitNovalTools
         {
             OpenFolderDialog dialog = new OpenFolderDialog();
             CurrentFolder = await dialog.ShowAsync((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
+        }
+
+        public async void ConvertFiles()
+        {
+            OpenFolderDialog dialog = new OpenFolderDialog();
+            var saveFolder = await dialog.ShowAsync((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
+
+            if (saveFolder == null)
+                return;
+
+            if (SelectedMode == CONV_MODE_B2P)
+            {
+                await Task.Run(() => ConvertBinsToPngs(saveFolder));
+            }
+            else if (SelectedMode == CONV_MODE_P2B)
+            {
+                await Task.Run(() => ConvertPngsToBins(saveFolder));
+            }
+        }
+
+        private void ConvertPngsToBins(string saveFolder)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ConvertBinsToPngs(string saveFolder)
+        {
+            var currentFolderFullPath = Path.GetFullPath(CurrentFolder);
+            var saveFolderFullPath = Path.GetFullPath(saveFolder);
+
+            Progress = 0;
+            for (int i = 0; i < Files.Count; i++)
+            {
+                var file = Files[i];
+                var fullPath = Path.GetFullPath(file);
+                var savePath = Path.ChangeExtension(fullPath.Replace(currentFolderFullPath, saveFolderFullPath), ".png");
+                var saveFileFolder = Path.GetDirectoryName(savePath);
+                if (!Directory.Exists(saveFileFolder))
+                    Directory.CreateDirectory(saveFileFolder);
+
+                BinaryImage binaryImage = new BinaryImage(file);
+                binaryImage.Image.SaveAsPng(savePath);
+                Progress = (double)i / Files.Count * 100;
+            }
         }
     }
 }

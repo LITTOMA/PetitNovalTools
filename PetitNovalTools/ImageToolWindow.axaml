@@ -78,6 +78,7 @@
 					<Button
 						HorizontalAlignment="Stretch"
 						HorizontalContentAlignment="Center"
+						Command="{Binding ConvertFiles}"
 						Content="转换"/>
 				</StackPanel>
 			</Grid>

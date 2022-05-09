@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -14,6 +12,8 @@ namespace PetitNovalTools.Formats
     public enum BinaryPixelFormat : ushort
     {
         Rgba32 = 1,
+        Rgba16 = 99,
+        Rgb565
     }
 
     public class BinaryImage
@@ -35,7 +35,7 @@ namespace PetitNovalTools.Formats
             PixelFormat = BinaryPixelFormat.Rgba32;
             Width = width;
             Height = height;
-            data = new byte[Width * Height * 4];
+            data = new byte[Width * Height * 4 + 6];
             isCompressed = true;
         }
 
@@ -72,6 +72,14 @@ namespace PetitNovalTools.Formats
 
         public void Save(string path)
         {
+            var ushortBuffer = new byte[2];
+            BinaryPrimitives.WriteUInt16LittleEndian(ushortBuffer, (ushort)PixelFormat);
+            Array.Copy(ushortBuffer, 0, data, 0, 2);
+            BinaryPrimitives.WriteUInt16LittleEndian(ushortBuffer, Width);
+            Array.Copy(ushortBuffer, 0, data, 2, 2);
+            BinaryPrimitives.WriteUInt16LittleEndian(ushortBuffer, Height);
+            Array.Copy(ushortBuffer, 0, data, 4, 2);
+
             using (var fs = File.Create(path))
             {
                 var writer = new BinaryWriter(fs);
@@ -103,6 +111,10 @@ namespace PetitNovalTools.Formats
                         throw new NotSupportedException($"Pixel format: {PixelFormat}");
                     case BinaryPixelFormat.Rgba32:
                         return Image.LoadPixelData<Rgba32>(data.Skip(6).ToArray(), Width, Height);
+                    case BinaryPixelFormat.Rgba16:
+                        return Image.LoadPixelData<Bgra4444>(data.Skip(6).ToArray(), Width, Height);
+                    case BinaryPixelFormat.Rgb565:
+                        return Image.LoadPixelData<Bgr565>(data.Skip(6).ToArray(), Width, Height);
                 }
             }
 
@@ -131,6 +143,23 @@ namespace PetitNovalTools.Formats
                     img.CopyPixelDataTo(pixels);
                     Array.Copy(pixels, 0, data, 6, pixels.Length);
                     break;
+            }
+        }
+
+        public static bool IsValidBinaryImage(string path)
+        {
+            try
+            {
+                BinaryImage image = new BinaryImage(path);
+                var img = image.GetImage();
+                if (img == null)
+                    return false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"{ex.Message}, file: {path}");
+                return false;
             }
         }
     }

@@ -146,6 +146,7 @@ namespace PetitNovalTools
                 }
                 Progress = (double)i++ / (double)binFiles.Length * 100;
             }
+            Progress = 100f;
             return result;
         }
 
@@ -175,7 +176,33 @@ namespace PetitNovalTools
 
         private void ConvertPngsToBins(string saveFolder)
         {
-            throw new NotImplementedException();
+            var currentFolderFullPath = Path.GetFullPath(CurrentFolder);
+            var saveFolderFullPath = Path.GetFullPath(saveFolder);
+
+            Progress = 0;
+            int handledFileCount = 0;
+            Parallel.ForEach(Files, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, file =>
+            {
+                var fullPath = Path.GetFullPath(file);
+                var savePath = Path.ChangeExtension(fullPath.Replace(currentFolderFullPath, saveFolderFullPath), ".bin");
+                var saveFileFolder = Path.GetDirectoryName(savePath);
+                if (!Directory.Exists(saveFileFolder))
+                    Directory.CreateDirectory(saveFileFolder);
+
+                var image = SixLabors.ImageSharp.Image.Load(file);
+                if (image != null)
+                {
+                    BinaryImage binaryImage = new BinaryImage(image);
+                    binaryImage.Save(savePath);
+                }
+
+                lock (this)
+                {
+                    handledFileCount++;
+                    Progress = (double)handledFileCount / Files.Count * 100;
+                }
+            });
+            Progress = 100f;
         }
 
         private void ConvertBinsToPngs(string saveFolder)
@@ -184,9 +211,9 @@ namespace PetitNovalTools
             var saveFolderFullPath = Path.GetFullPath(saveFolder);
 
             Progress = 0;
-            for (int i = 0; i < Files.Count; i++)
+            int handledFileCount = 0;
+            Parallel.ForEach(Files, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, file =>
             {
-                var file = Files[i];
                 var fullPath = Path.GetFullPath(file);
                 var savePath = Path.ChangeExtension(fullPath.Replace(currentFolderFullPath, saveFolderFullPath), ".png");
                 var saveFileFolder = Path.GetDirectoryName(savePath);
@@ -195,8 +222,14 @@ namespace PetitNovalTools
 
                 BinaryImage binaryImage = new BinaryImage(file);
                 binaryImage.Image.SaveAsPng(savePath);
-                Progress = (double)i / Files.Count * 100;
-            }
+
+                lock (this)
+                {
+                    handledFileCount++;
+                    Progress = (double)handledFileCount / Files.Count * 100;
+                }
+            });
+            Progress = 100f;
         }
     }
 }

@@ -76,6 +76,11 @@ namespace PetitNovalTools.Formats
             Height = BinaryPrimitives.ReadUInt16LittleEndian(data.Skip(4).Take(2).ToArray());
         }
 
+        public BinaryImage(Image image) : this((ushort)image.Width, (ushort)image.Height)
+        {
+            Image = image;
+        }
+
         public void Save(string path)
         {
             var ushortBuffer = new byte[2];

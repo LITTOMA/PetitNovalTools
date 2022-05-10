@@ -8,6 +8,8 @@ namespace PetitNovalTools
 {
     public partial class ImageToolWindow : ToolWindow
     {
+        public static ToolWindow Instance { get; private set; }
+
         public ImageToolWindow()
         {
             InitializeComponent();
@@ -15,6 +17,12 @@ namespace PetitNovalTools
 #if DEBUG
             this.AttachDevTools();
 #endif
+        }
+
+        public override void EndInit()
+        {
+            Instance = this;
+            base.EndInit();
         }
 
         private void ImageToolWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs args)

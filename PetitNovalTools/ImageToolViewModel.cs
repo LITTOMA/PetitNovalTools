@@ -153,13 +153,13 @@ namespace PetitNovalTools
         public async void OpenFolder()
         {
             OpenFolderDialog dialog = new OpenFolderDialog();
-            CurrentFolder = await dialog.ShowAsync((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
+            CurrentFolder = await dialog.ShowAsync(ImageToolWindow.Instance);
         }
 
         public async void ConvertFiles()
         {
             OpenFolderDialog dialog = new OpenFolderDialog();
-            var saveFolder = await dialog.ShowAsync((Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
+            var saveFolder = await dialog.ShowAsync(ImageToolWindow.Instance);
 
             if (saveFolder == null)
                 return;

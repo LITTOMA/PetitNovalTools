@@ -6,6 +6,7 @@ namespace PetitNovalTools
     public partial class MainWindow : Window
     {
         ImageToolWindow imageTool = new ImageToolWindow();
+        FontToolWindow fontTool = new FontToolWindow();
 
         public MainWindow()
         {

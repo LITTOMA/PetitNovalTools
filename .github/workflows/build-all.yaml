@@ -1,0 +1,43 @@
+name: Build for Windows
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+      
+    - name: setup msbuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v1
+
+    - name: build
+      run: |
+        dotnet restore
+        dotnet publish --self-contained=True -p:PublishSingleFile=True -p:IncludeNativeLibrariesForSelfExtract=True -p:PublishTrimmed=True -c:Release -r win-x64 -o publish
+        dotnet msbuild -t:BundleApp -p:Configuration=Release -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true -p:PublishTrimmed=True
+        dotnet publish -p:Configuration=Release -p:TargetFramework=net6.0 -p:RuntimeIdentifier=linux-x64 --self-contained=True -p:PublishSingleFile=True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -o publish
+
+    - name: upload windows artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: PetitNovalTools.win-x64
+        path: publish/PetitNovalTools.exe
+        
+    - name: upload macos artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: PetitNovalTools.app
+        path: ./PetitNovalTools/bin/Release/net6.0/osx-x64/publish/Petit Noval Tools.app
+         
+    - name: upload linux artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: PetitNovalTools.linux-x64
+        path: ./publish/PetitNovalTools

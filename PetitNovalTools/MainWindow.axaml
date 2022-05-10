@@ -22,6 +22,7 @@
 			图片工具
 		</Button>
 		<Button
+			IsEnabled="False"
 			Grid.Column="1"
 			Margin="4"
 			HorizontalAlignment="Stretch"

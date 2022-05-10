@@ -7,9 +7,15 @@
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AssemblyVersion>1.0</AssemblyVersion>
+    <FileVersion>1.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="WenQuanYiMicroHei.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\WenQuanYiMicroHei.ttf" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.

@@ -3,5 +3,21 @@
              x:Class="PetitNovalTools.App">
     <Application.Styles>
         <FluentTheme Mode="Light"/>
+		<Style Selector="Window">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontFamily" Value="avares://PetitNovalTools/Assets/Fonts#WenQuanYi Micro Hei" />
+		</Style>
+		<Style Selector="TextBlock">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontFamily" Value="avares://PetitNovalTools/Assets/Fonts#WenQuanYi Micro Hei" />
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontFamily" Value="avares://PetitNovalTools/Assets/Fonts#WenQuanYi Micro Hei" />
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontFamily" Value="avares://PetitNovalTools/Assets/Fonts#WenQuanYi Micro Hei" />
+		</Style>
     </Application.Styles>
 </Application>

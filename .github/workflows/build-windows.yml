@@ -19,10 +19,8 @@ jobs:
 
     - name: build
       run: |
-        cd src
         dotnet restore
         dotnet publish --self-contained=True -p:PublishSingleFile=True -p:IncludeNativeLibrariesForSelfExtract=True -p:PublishTrimmed=True -c:Release -r win-x64 -o publish
-        cd ..
 
     - name: upload artifact
       uses: actions/upload-artifact@v1.0.0

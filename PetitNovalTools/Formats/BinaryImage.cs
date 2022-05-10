@@ -127,7 +127,7 @@ namespace PetitNovalTools.Formats
                     case BinaryPixelFormat.Rgba4444:
                         return Image.LoadPixelData<Rgba4444>(data.Skip(6).ToArray(), Width, Height);
                     case BinaryPixelFormat.Rgb565:
-                        return Image.LoadPixelData<Bgr565>(data.Skip(6).ToArray(), Width, Height);
+                        return Image.LoadPixelData<Rgb565>(data.Skip(6).ToArray(), Width, Height);
                     case BinaryPixelFormat.Rgba5551:
                         return Image.LoadPixelData<Bgra5551>(data.Skip(6).ToArray(), Width, Height);
                     case BinaryPixelFormat.La88:
@@ -168,7 +168,7 @@ namespace PetitNovalTools.Formats
                     Array.Copy(pixels, 0, data, 6, pixels.Length);
                     break;
                 case BinaryPixelFormat.Rgb565:
-                    var img565 = value.CloneAs<Bgr565>();
+                    var img565 = value.CloneAs<Rgb565>();
                     pixels = new byte[img565.Width * img565.Height * Unsafe.SizeOf<Bgr565>()];
                     img565.CopyPixelDataTo(pixels);
                     Array.Copy(pixels, 0, data, 6, pixels.Length);

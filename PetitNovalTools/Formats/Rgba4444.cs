@@ -182,7 +182,7 @@ namespace SixLabors.ImageSharp.PixelFormats
         internal class PixelOperations : PixelOperations<Rgba4444>
         {
             private static readonly Lazy<PixelTypeInfo> LazyInfo =
-                new Lazy<PixelTypeInfo>(() => new PixelTypeInfo(16), true);
+                new Lazy<PixelTypeInfo>(() => new PixelTypeInfo(16, PixelAlphaRepresentation.Associated), true);
 
             /// <inheritdoc />
             public override PixelTypeInfo GetPixelTypeInfo() => LazyInfo.Value;

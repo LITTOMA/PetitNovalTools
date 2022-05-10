@@ -33,7 +33,7 @@ jobs:
     - name: upload macos artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: PetitNovalTools.app
+        name: PetitNovalTools.macos
         path: ./PetitNovalTools/bin/Release/net6.0/osx-x64/publish/Petit Noval Tools.app
          
     - name: upload linux artifact

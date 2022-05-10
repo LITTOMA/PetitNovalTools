@@ -1,0 +1,26 @@
+name: Build for Linux
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+      
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v1
+
+    - name: build
+      run: |
+        dotnet restore
+        dotnet publish -p:Configuration=Release -p:TargetFramework=net6.0 -p:RuntimeIdentifier=linux-x64 --self-contained=True -p:PublishSingleFile=True -p:PublishTrimmed=True -p:IncludeNativeLibrariesForSelfExtract=True -o publish
+        
+    - name: upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: PetitNovalTools.Linux
+        path: ./publish/PetitNovalTools

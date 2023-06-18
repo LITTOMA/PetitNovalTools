@@ -144,7 +144,7 @@ namespace PetitNovalTools
                 {
                     result.Add(binFile);
                 }
-                Progress = (double)i++ / (double)binFiles.Length * 100;
+                Progress = (double)i / (double)binFiles.Length * 100;
             }
             Progress = 100f;
             return result;
